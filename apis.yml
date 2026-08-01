@@ -1,8 +1,25 @@
 aid: reevo
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/reevo.png
 name: Reevo
-description: 'Reevo is a company surfaced as a portfolio company of kleiner-perkins and added to the API
-  Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: 'Reevo is an AI-native revenue platform ("revenue operating system") that
+  consolidates the sales workflow into one system across four products: Find (lead
+  sourcing, enrichment, routing and scoring), Engage (email sequences, dialing, inbox
+  and meeting prep), Win (deal monitoring, smart task logging and coaching) and Foundation
+  (a native CRM with an AI copilot, reporting, workflows and integrations). It helps
+  GTM teams eliminate tool sprawl and automate repetitive sales work. Backed by Kleiner
+  Perkins; API access is listed as a paid-plan feature but no public developer documentation
+  or OpenAPI is published.'
 url: https://raw.githubusercontent.com/api-evangelist/reevo/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -12,10 +29,15 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
 - Ai
+- Sales
+- CRM
+- Revenue Operations
+- Sales Automation
+- Lead Generation
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -23,5 +45,29 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/reevo-domain-security.yml
 - type: Website
   url: https://www.reevo.ai
+- type: Pricing
+  url: https://www.reevo.ai/pricing
+- type: Blog
+  url: https://www.reevo.ai/blog
+- type: ChangeLog
+  url: https://www.reevo.ai/release-notes
+- type: ChangeLog
+  name: Reevo release-notes changelog (harvested)
+  url: changelog/reevo-changelog.yml
+- type: Login
+  url: https://www.reevo.ai/login
+- type: PrivacyPolicy
+  url: https://www.reevo.ai/privacy
+- type: TermsOfService
+  url: https://www.reevo.ai/terms
+- type: GitHubOrganization
+  url: https://github.com/reevoai
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 2
+  pass: local-v1

@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: searched
+source: https://www.reevo.ai/release-notes
+scheme: dated-feed
+current_version: null
+notes: Reevo publishes an undated-versioned, dated release-notes feed for its AI-native revenue platform (Find/Engage/Win/Foundation). Recent window captured below; the live feed is the source of truth.
+entries:
+- date: '2026-06-24'
+  breaking: false
+  highlights:
+  - 'Merge Records: reps can consolidate duplicate records while preserving custom relationships and deal data.'
+- date: '2026-06-23'
+  breaking: false
+  highlights:
+  - 'Ask Reevo in Slack: query the system with @AskReevo prompts directly in channels.'
+- date: '2026-06-19'
+  breaking: false
+  highlights:
+  - 'Custom CRM Views via chat: Reevo configures filters and column displays from a chat prompt.'
+- date: '2026-06-16'
+  breaking: false
+  highlights:
+  - 'Full-screen asset viewing for generated materials.'
+- date: '2026-06-13'
+  breaking: false
+  highlights:
+  - 'Pitch deck generation via Ask Reevo: 6-10 slide meeting-ready decks from CRM data.'
+- date: '2026-06-12'
+  breaking: false
+  highlights:
+  - 'Workflow enhancements: sequence pause/resume nodes and account management from chat prompts.'
