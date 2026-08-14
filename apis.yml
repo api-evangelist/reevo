@@ -1,15 +1,18 @@
 aid: reevo
 accessModel:
-  pricing: unknown
-  onboarding: unknown
+  pricing: paid
+  onboarding: sales
   trial: false
   try_now: false
-  public: false
-  label: Unknown
-  confidence: low
-  source: []
-  generated: '2026-07-22'
-  method: derived
+  public: true
+  label: Paid, sales-onboarded
+  confidence: medium
+  source:
+  - https://reevo.ai/pricing
+  - https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  - https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+  generated: '2026-08-13'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/reevo.png
 name: Reevo
 description: 'Reevo is an AI-native revenue platform ("revenue operating system") that
@@ -18,18 +21,24 @@ description: 'Reevo is an AI-native revenue platform ("revenue operating system"
   and meeting prep), Win (deal monitoring, smart task logging and coaching) and Foundation
   (a native CRM with an AI copilot, reporting, workflows and integrations). It helps
   GTM teams eliminate tool sprawl and automate repetitive sales work. Backed by Kleiner
-  Perkins; API access is listed as a paid-plan feature but no public developer documentation
-  or OpenAPI is published.'
+  Perkins and Khosla Ventures. Reevo ships two callable surfaces: a permission-scoped
+  public REST API at https://api.reevo.ai/api/v1/public authenticated with an x-api-key
+  header (accounts, contacts, opportunities, tasks, manual activities, users, mailboxes
+  and sequence enrollments), and a remote Model Context Protocol server at https://mcp.reevo.ai/mcp
+  that exposes roughly 30 CRM tools over streamable-HTTP with OAuth 2.0 and granular
+  read/create/update scopes. Neither surface publishes an OpenAPI or AsyncAPI definition
+  — the contract is documented in prose in the Reevo Knowledge Base.'
 url: https://raw.githubusercontent.com/api-evangelist/reevo/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - kleiner-perkins
-x-tier: stub
-x-tier-reason: portfolio-lead
+- khosla-ventures
+x-tier: profile
+x-tier-reason: callable-rest-and-mcp-surface
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-08-13'
 tags:
 - Company
 - Ai
@@ -38,17 +47,77 @@ tags:
 - Revenue Operations
 - Sales Automation
 - Lead Generation
-apis: []
+- Agents
+- MCP
+- Sales Engagement
+apis:
+- aid: reevo-public-rest-api
+  name: Reevo Public REST API
+  description: 'Reevo''s permission-scoped public REST API. Endpoints cover account
+    and contact upsert, accounts (create/update/get/search-by-domain), contacts (get/search),
+    opportunities (create/update/get/search/shift-stage), tasks, manual activities,
+    user search, mailbox search, sequence enrollment and combined account-and-contact
+    retrieval. Authentication is an x-api-key header carrying a workspace API key whose
+    per-resource read/write permissions are chosen at creation time. The service is
+    a FastAPI/uvicorn application; no OpenAPI definition is published.'
+  humanURL: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  baseURL: https://api.reevo.ai/api/v1/public
+  tags:
+  - CRM
+  - Sales
+  - Revenue Operations
+  properties:
+  - type: Documentation
+    url: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  - type: Authentication
+    url: authentication/reevo-authentication.yml
+  - type: ErrorCatalog
+    url: errors/reevo-problem-types.yml
+  - type: Conventions
+    url: conventions/reevo-conventions.yml
+  - type: DataModel
+    url: data-model/reevo-data-model.yml
+- aid: reevo-mcp-server
+  name: Reevo MCP Server
+  description: 'Reevo''s remote Model Context Protocol server. An MCP client POSTs
+    to https://mcp.reevo.ai/mcp over MCP streamable-HTTP transport with OAuth 2.0 authorization
+    (dynamic client registration, PKCE S256). It exposes roughly 30 tools across accounts,
+    contacts, opportunities and pipelines, meetings, activity timeline, tasks, notes,
+    email threads and mailboxes, sequences, custom objects and object schema, plus
+    user search and whoami. Every call runs as the connected Reevo user and respects
+    that user''s existing permissions; write tools act directly on the production workspace.
+    Access is early-access and enabled per organization by Reevo.'
+  humanURL: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+  baseURL: https://mcp.reevo.ai/mcp
+  tags:
+  - MCP
+  - Agents
+  - CRM
+  properties:
+  - type: Documentation
+    url: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+  - type: MCPServer
+    url: mcp/reevo-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/reevo-tool-crosswalk.yml
+  - type: OAuthScopes
+    url: scopes/reevo-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
-- type: DomainSecurity
-  url: security/reevo-domain-security.yml
 - type: Website
   url: https://www.reevo.ai
+- type: Documentation
+  url: https://help.reevo.ai
+- type: APIReference
+  url: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+- type: GettingStarted
+  url: https://help.reevo.ai/Getting-started/Onboarding
+- type: Support
+  url: https://help.reevo.ai
 - type: Pricing
   url: https://www.reevo.ai/pricing
 - type: Blog
@@ -59,15 +128,52 @@ common:
   name: Reevo release-notes changelog (harvested)
   url: changelog/reevo-changelog.yml
 - type: Login
-  url: https://www.reevo.ai/login
+  url: https://app.reevo.ai/login
 - type: PrivacyPolicy
   url: https://www.reevo.ai/privacy
 - type: TermsOfService
   url: https://www.reevo.ai/terms
 - type: GitHubOrganization
-  url: https://github.com/reevoai
+  url: https://github.com/ReevoAI
+- type: Compliance
+  url: https://www.reevo.ai/pricing
+  name: Published compliance posture (SOC 2, ISO 27001)
+- type: MCPServer
+  url: mcp/reevo-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/reevo-tool-crosswalk.yml
+- type: AgentCard
+  url: a2a/reevo-a2a.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/reevo-llms.txt
+- type: WellKnown
+  url: well-known/reevo-well-known.yml
+- type: Authentication
+  url: authentication/reevo-authentication.yml
+- type: OAuthScopes
+  url: scopes/reevo-scopes.yml
+- type: Conventions
+  url: conventions/reevo-conventions.yml
+- type: ErrorCatalog
+  url: errors/reevo-problem-types.yml
+- type: DataModel
+  url: data-model/reevo-data-model.yml
+- type: Conformance
+  url: conformance/reevo-conformance.yml
+- type: Lifecycle
+  url: lifecycle/reevo-lifecycle.yml
+- type: Webhooks
+  url: asyncapi/reevo-webhooks.yml
+- type: Plans
+  url: plans/reevo-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/reevo-rate-limits.yml
+- type: DomainSecurity
+  url: security/reevo-domain-security.yml
 x-enrichment:
-  date: '2026-07-21'
+  date: '2026-08-13'
   status: enriched
-  artifacts_added: 2
+  artifacts_added: 21
   pass: local-v1
