@@ -1,0 +1,61 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+docs:
+- https://www.reevo.ai/release-notes
+- https://www.reevo.ai/pricing
+- https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://api.reevo.ai/api/v1/public
+  policy_url: null
+  note: The version appears in the path as /api/v1/. Reevo publishes no versioning
+    policy, no statement of how long a version is supported, and no version-negotiation
+    header.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no
+    breaking-change notice channel is published for either the REST API or the MCP
+    server. The dated release-notes feed announces additions; it has carried no API
+    deprecation entry in the captured window.
+sla:
+  url: https://www.reevo.ai/pricing
+  uptime_target: null
+  support_response_targets:
+  - plan: Core
+    first_response: 48 hours
+  - plan: Pro
+    first_response: 24 hours
+  - plan: Enterprise
+    first_response: custom
+  note: The only SLA Reevo publishes is a support first-response target per plan. No
+    uptime or availability commitment is published on any public page.
+status_page: null
+status_page_note: Probed status.reevo.ai (no DNS record) and https://reevo.ai/status
+  (HTTP 404) on 2026-08-13. Reevo publishes no status page, so no StatusPage pointer
+  is emitted.
+maturity:
+- surface: Reevo Public REST API
+  stage: generally-available
+  evidence: Documented in the knowledge base with no beta or early-access qualifier;
+    live and answering on api.reevo.ai.
+- surface: Reevo MCP Server
+  stage: early-access
+  evidence: 'Reevo states: "Reevo MCP is currently available only to organizations
+    enabled by Reevo. Connections from workspaces that have not been enabled fail at
+    authorization."'
+  source: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+- surface: Slack MCP connector
+  stage: beta
+  evidence: Release note of 2026-07-17 lists Notion, Linear, Pylon, PostHog and Google
+    Drive connectors as generally available and the Slack connector as available to
+    beta customers.
+deprecated_operations: []
+changelog: changelog/reevo-changelog.yml
+gaps:
+- No API deprecation policy or Sunset header support.
+- No status page or uptime SLA.
+- No published support window for API version v1.

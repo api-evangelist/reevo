@@ -1,0 +1,105 @@
+generated: '2026-08-13'
+method: searched
+source: https://mcp.reevo.ai/.well-known/oauth-authorization-server + https://login.reevo.ai/.well-known/openid-configuration
+  + https://www.reevo.ai/pricing
+note: Each entry records what was actually observed on a Reevo host or stated on a
+  Reevo page. Entries marked conforms:false are honest absences, not failures to look.
+standards:
+- id: oauth2
+  conforms: true
+  evidence: https://mcp.reevo.ai/.well-known/oauth-authorization-server returns HTTP
+    200 with issuer, authorization_endpoint, token_endpoint, grant_types_supported
+    [authorization_code, refresh_token].
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: https://mcp.reevo.ai/.well-known/oauth-authorization-server (200, application/json)
+    and https://login.reevo.ai/.well-known/oauth-authorization-server (200).
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  evidence: https://mcp.reevo.ai/.well-known/oauth-protected-resource returns resource,
+    authorization_servers, bearer_methods_supported [header], resource_documentation.
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint https://mcp.reevo.ai/register advertised in the MCP
+    authorization-server metadata.
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported [S256] on the MCP authorization server;
+    [S256, plain] on the login host.
+- id: oidc-discovery
+  conforms: true
+  evidence: https://login.reevo.ai/.well-known/openid-configuration returns HTTP 200
+    with issuer, jwks_uri, userinfo_endpoint and 14 supported scopes.
+  note: Applies to end-user sign-in at login.reevo.ai, not to either API surface.
+- id: mcp
+  conforms: true
+  version: streamable-http transport with OAuth 2.0 authorization
+  evidence: Reevo documents https://mcp.reevo.ai/mcp as an MCP streamable-HTTP endpoint;
+    an anonymous JSON-RPC tools/list POST returns a JSON 401 invalid_token rather than
+    an HTML page.
+  source: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+- id: a2a
+  conforms: partial
+  evidence: An A2A Agent Card is served at https://help.reevo.ai/.well-known/agent-card.json
+    (HTTP 200). Graded near-conformant against A2A 1.0.0 — it uses the pre-1.0 `supportedInterfaces`
+    key. See a2a/reevo-a2a.yml.
+- id: llmstxt
+  conforms: true
+  evidence: https://help.reevo.ai/llms.txt returns HTTP 200 text/plain, 109 lines,
+    with the H1/blockquote/link-list structure the format specifies.
+- id: openapi
+  conforms: false
+  evidence: No OpenAPI or Swagger document on any Reevo host. Probed api.reevo.ai /openapi.json,
+    /openapi.yaml, /swagger.json, /api/openapi.json, /api/v1/openapi.json, /api/v1/public/openapi.json,
+    /api/v1/public/openapi.yaml, /api/docs, /api/v1/docs, /api/v1/public/docs, /api/redoc,
+    /api/v1/redoc, /api-docs, /docs, /api/schema and /api/v1/schema — all 404 on 2026-08-13.
+- id: asyncapi
+  conforms: false
+  evidence: No AsyncAPI document published. Reevo's event surface is per-workflow webhooks
+    rather than a subscription API; see asyncapi/reevo-webhooks.yml.
+- id: graphql
+  conforms: false
+  evidence: https://api.reevo.ai/graphql returns HTTP 404.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Observed error bodies use application/json with a FastAPI `detail` array
+    or a vendor {error_response_type, error, message, details} envelope. No application/problem+json.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on reevo.ai, api.reevo.ai, mcp.reevo.ai,
+    help.reevo.ai and login.reevo.ai.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No deprecation policy or Sunset/Deprecation header support is documented.
+- id: rfc6749-scim
+  conforms: false
+  evidence: No SCIM 2.0 provisioning endpoint is documented.
+- id: rfc9111-ratelimit-headers
+  conforms: false
+  evidence: No RateLimit-* or X-RateLimit-* headers documented or observed.
+- id: idempotency-key
+  conforms: false
+  evidence: No idempotency key header is documented on any write endpoint.
+compliance_program:
+  published: true
+  source: https://www.reevo.ai/pricing
+  also_on: https://www.reevo.ai/
+  claims_verbatim:
+  - SOC2 Compliant
+  - AICPA SOC Trusted
+  - ISO 27001 Certified
+  certifications:
+  - SOC 2
+  - ISO 27001
+  trust_center: null
+  report_access: null
+  note: 'These are badge-level claims rendered on Reevo''s marketing pages. No trust
+    center, no audit report request flow, no report date and no auditor is published:
+    trust.reevo.ai and security.reevo.ai do not resolve, and https://reevo.ai/security,
+    /trust and /compliance all return 404. The claims are recorded as published, not
+    as independently verified.'
+  related_pages:
+  - https://www.reevo.ai/privacy
+  - https://www.reevo.ai/terms
+  - https://www.reevo.ai/dpa
+  - https://www.reevo.ai/subprocessors

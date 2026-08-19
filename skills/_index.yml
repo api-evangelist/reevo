@@ -1,0 +1,32 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/.well-known/agent-skills/reevoai/skill.md
+note: Reevo publishes its own Agent Skill and advertises it from the A2A agent card
+  at https://help.reevo.ai/.well-known/agent-card.json. The file below is saved verbatim
+  as fetched — API Evangelist authored none of it. No skills were generated for this
+  provider because Reevo publishes no OpenAPI to ground operationIds in.
+skills:
+- file: reevo-reevoai.md
+  name: Reevoai
+  description: Use when building CRM workflows, automating sales outreach, configuring
+    data integrations, managing contacts and opportunities, creating automated sequences,
+    setting up meeting intelligence, or building custom workflows. Reach for this skill
+    when users need to manage their sales pipeline, automate prospecting, integrate
+    external tools, or configure CRM data structures.
+  api: https://api.reevo.ai/api/v1/public
+  source: https://help.reevo.ai/.well-known/agent-skills/reevoai/skill.md
+  method: searched
+  version: '1.0'
+  publisher: Reevo
+  covers:
+  - workflows
+  - sequences
+  - custom fields
+  - api key setup
+  - crm configuration
+x-evidence:
+  fetched: '2026-08-13'
+  url: https://help.reevo.ai/.well-known/agent-skills/reevoai/skill.md
+  http_status: 200
+  content_type: text/markdown; charset=utf-8
+  size_bytes: 11704

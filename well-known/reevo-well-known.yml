@@ -1,0 +1,139 @@
+generated: '2026-08-13'
+method: probed
+source: live GET probes of every Reevo host on 2026-08-13
+note: Reevo serves real /.well-known documents on two hosts — the MCP server (OAuth
+  2.0 authorization-server and protected-resource metadata) and the identity host (OpenID
+  Connect discovery). No security.txt, api-catalog or ai-plugin.json is served anywhere.
+  app.reevo.ai answers HTTP 200 with an HTML single-page-app shell for every /.well-known/*
+  path; those are recorded as shell rather than documents and are NOT counted as hits.
+hosts:
+- host: https://mcp.reevo.ai
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: reevo-oauth-authorization-server.json
+    kind: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+    file: reevo-oauth-protected-resource.json
+    kind: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://login.reevo.ai
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    file: reevo-openid-configuration.json
+    kind: OpenID Connect Discovery 1.0
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    kind: RFC 8414; same Auth0-backed tenant metadata as the OIDC discovery document
+      above, not saved separately
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+- host: https://help.reevo.ai
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    file: ../a2a/reevo-agent-card.json
+    kind: A2A Agent Card (see a2a/reevo-a2a.yml)
+  - path: /.well-known/agent-skills/reevoai/skill.md
+    status: 200
+    content_type: text/markdown; charset=utf-8
+    file: ../skills/reevo-reevoai.md
+    kind: Provider-published Agent Skill
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://api.reevo.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://reevo.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  note: www.reevo.ai issues an HTTP 307 to the reevo.ai apex for every /.well-known
+    path; the apex answers 404 with the site's HTML error page.
+- host: https://app.reevo.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    kind: shell
+  - path: /.well-known/openid-configuration
+    status: 200
+    kind: shell
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    kind: shell
+  - path: /.well-known/api-catalog
+    status: 200
+    kind: shell
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    kind: shell
+  - path: /.well-known/agent-card.json
+    status: 200
+    kind: shell
+  - path: /.well-known/agent.json
+    status: 200
+    kind: shell
+  note: Every path returns the same ~39KB text/html single-page-app document. These
+    are catch-all responses, not documents, and are recorded as misses.
+summary:
+  documents_found: 5
+  security_txt: false
+  api_catalog: false
+  ai_plugin: false
+  oidc_discovery: true
+  oauth_authorization_server: true
+  oauth_protected_resource: true
+  agent_card: true

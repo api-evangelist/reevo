@@ -1,0 +1,145 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.reevo.ai/pricing
+currency: USD
+billing_period: monthly
+pricing_model: per-seat, price on request
+plan_count: 3
+public_prices: false
+public_prices_note: Reevo publishes named tiers with itemised quotas but no dollar
+  figure on any tier — every plan routes to a sales conversation. Currency is inferred
+  from the US-only sales motion and is not printed on the page.
+trial: null
+free_tier: false
+plans:
+- name: Core
+  price: null
+  price_note: Not published; contact sales.
+  currency: USD
+  billing_period: monthly
+  limits:
+  - metric: enrichment credits
+    included: 1000
+    unit: credits
+    scope: per user per month
+  - metric: dialer minutes
+    included: 1000
+    unit: minutes
+    scope: per user per month
+  - metric: meeting minutes recorded
+    included: 2500
+    unit: minutes
+    scope: per user per month
+  - metric: active sequences
+    included: 50
+    scope: per org
+  - metric: email domains
+    included: 2
+    scope: per org
+  - metric: inboxes
+    included: 5
+    scope: per org
+  - metric: scheduling links
+    included: 2
+    scope: per user
+  - metric: phone numbers
+    included: 1
+    scope: per user
+  - metric: custom objects
+    included: 5
+    scope: per org
+  - metric: custom fields
+    included: 100
+    scope: per org
+  - metric: workflow credits
+    included: 20000
+    unit: credits
+    scope: per org per month
+  - metric: reports
+    included: 300
+    scope: per org
+  - metric: dashboards
+    included: 50
+    scope: per org
+  - metric: custom datasets
+    included: 20
+    scope: per org
+  support_sla: 48 hours first response
+  overage: null
+- name: Pro
+  price: null
+  price_note: Not published; contact sales.
+  currency: USD
+  billing_period: monthly
+  limits:
+  - metric: enrichment credits
+    included: 2000
+    unit: credits
+    scope: per user per month
+  - metric: dialer minutes
+    included: 2000
+    unit: minutes
+    scope: per user per month
+  - metric: meeting minutes recorded
+    included: 4000
+    unit: minutes
+    scope: per user per month
+  - metric: active sequences
+    included: 100
+    scope: per org
+  - metric: email domains
+    included: 2
+    scope: per org
+  - metric: inboxes
+    included: 5
+    scope: per org
+  - metric: scheduling links
+    included: unlimited
+    scope: per user
+  - metric: phone numbers
+    included: 1
+    scope: per user
+    note: plus one number change
+  - metric: custom objects
+    included: 10
+    scope: per org
+  - metric: custom fields
+    included: 300
+    scope: per org
+  - metric: workflow credits
+    included: 40000
+    unit: credits
+    scope: per org per month
+  - metric: reports
+    included: unlimited
+    scope: per org
+  - metric: dashboards
+    included: unlimited
+    scope: per org
+  - metric: custom datasets
+    included: unlimited
+    scope: per org
+  support_sla: 24 hours first response
+  extras:
+  - Slack Connect with the Reevo team
+  overage: null
+- name: Enterprise
+  price: null
+  price_note: 'Custom. Reevo''s page says: "We''ll build your plan together."'
+  currency: USD
+  billing_period: custom
+  limits: []
+  limits_note: All quotas are custom.
+  support_sla: custom
+  overage: null
+api_access:
+  named_as_a_plan_feature: false
+  note: The comparison table lists "Integrations & MCP" as a managed feature and attaches
+    workflow credits to it (20,000/org/mo on Core, 40,000/org/mo on Pro), but neither
+    public REST API access nor API key provisioning is itemised as a per-tier entitlement.
+    The knowledge base states only that an organization must have "available quota
+    for public requests" to create an API key, without naming the number or the tier
+    it comes from. The MCP server is separately gated to organizations Reevo has enabled,
+    independent of plan.
+  quota_metric_for_api: public requests
+  quota_value: null

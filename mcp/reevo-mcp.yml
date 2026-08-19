@@ -1,0 +1,182 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+status: published
+deployment:
+  mode: remote
+  endpoint: https://mcp.reevo.ai/mcp
+  auth: oauth
+  verified: probed
+server:
+  name: Reevo MCP
+  transport: streamable-http
+  url: https://mcp.reevo.ai/mcp
+  docs: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+  availability: early-access
+  availability_note: Reevo MCP is available only to organizations Reevo has enabled;
+    connections from workspaces that have not been enabled fail at authorization.
+  supported_clients:
+  - Claude Desktop
+  - Claude.ai
+  - Cursor
+  - ChatGPT Developer Mode
+authorization:
+  type: oauth2
+  spec: OAuth 2.1 style authorization-code with PKCE
+  issuer: https://mcp.reevo.ai
+  authorization_endpoint: https://mcp.reevo.ai/authorize
+  token_endpoint: https://mcp.reevo.ai/token
+  registration_endpoint: https://mcp.reevo.ai/register
+  revocation_endpoint: https://mcp.reevo.ai/token
+  grant_types:
+  - authorization_code
+  - refresh_token
+  code_challenge_methods:
+  - S256
+  dynamic_client_registration: true
+  protected_resource_metadata: https://mcp.reevo.ai/.well-known/oauth-protected-resource
+  authorization_server_metadata: https://mcp.reevo.ai/.well-known/oauth-authorization-server
+  scopes: scopes/reevo-scopes.yml
+  note: Reevo's authorization page shows the client exactly which scopes are requested,
+    each tied to an object type and an action (read, create or update). A tool can
+    only be called if the matching scope was granted at sign-in. Every call runs as
+    the connected user and respects that user's existing Reevo permissions.
+introspection:
+  tools_list: gated
+  http_status: 401
+  response: '{"error":"invalid_token","error_description":"Missing or invalid access
+    token"}'
+  note: An anonymous JSON-RPC tools/list POST to https://mcp.reevo.ai/mcp returns HTTP
+    401 invalid_token, so live inputSchema documents require an authenticated session
+    against an enabled workspace. The tool names and descriptions below are transcribed
+    from Reevo's own published MCP documentation, not invented; input schemas are not
+    reproduced because they were not observable anonymously.
+tool_count: 30
+tools:
+- name: search_accounts
+  category: accounts
+  description: Find accounts by name, owner, revenue, employee count, location, pipeline
+    stage, or any custom field.
+- name: get_accounts
+  category: accounts
+  description: Fetch the full record for one or more accounts by ID, including custom
+    fields and related data.
+- name: create_accounts
+  category: accounts
+  description: Create one or more accounts with name, domain, owner, and custom fields.
+- name: update_accounts
+  category: accounts
+  description: Update fields on existing accounts (owner, segment, custom fields, and
+    so on).
+- name: search_contacts
+  category: contacts
+  description: Find contacts by name, email, title, role, account, or custom field.
+- name: create_contacts
+  category: contacts
+  description: Create contacts and link them to accounts and opportunities.
+- name: update_contacts
+  category: contacts
+  description: Update contact fields, ownership, and account or opportunity associations.
+- name: search_opportunities
+  category: opportunities
+  description: Find opportunities by stage, amount, owner, account, close date, or
+    custom field.
+- name: create_opportunities
+  category: opportunities
+  description: Create new opportunities on an account, with stage, amount, close date,
+    and custom fields.
+- name: update_opportunities
+  category: opportunities
+  description: Update opportunity fields other than stage (amount, close date, owner,
+    custom fields).
+- name: update_opportunity_stages
+  category: opportunities
+  description: Move opportunities through pipeline stages, respecting the pipeline's
+    stage rules.
+- name: list_pipelines
+  category: pipelines
+  description: List the opportunity pipelines and their stages configured in your workspace.
+- name: search_meetings
+  category: meetings
+  description: Find meetings by date, attendees, account, opportunity, recording status,
+    or transcript presence.
+- name: search_activity_timeline
+  category: activity
+  description: Return a chronological activity timeline (meetings, tasks, notes and
+    emails) for an account or opportunity.
+- name: search_tasks
+  category: tasks
+  description: Find tasks by owner, due date, status, account, or opportunity.
+- name: create_tasks
+  category: tasks
+  description: Create tasks and link them to accounts, contacts, or opportunities.
+- name: update_tasks
+  category: tasks
+  description: Update task status, owner, due date, or description.
+- name: search_notes
+  category: notes
+  description: Find notes by content, author, account, contact, or opportunity.
+- name: create_notes
+  category: notes
+  description: Log a note on an account, contact, or opportunity.
+- name: search_email_threads
+  category: email
+  description: Find email threads by participants, subject, account, or opportunity.
+- name: list_mailboxes
+  category: email
+  description: List the email accounts the current user can send from, with status
+    and quota information.
+- name: search_sequences
+  category: sequences
+  description: Find sequences by ID, owner, status (DRAFT, ACTIVE, INACTIVE, TERMINATED),
+    or performance metrics.
+- name: enroll_in_sequence
+  category: sequences
+  description: Enroll contacts into a sequence to start outreach.
+  side_effects: Sends real outreach emails from the connected workspace.
+- name: unenroll_from_sequence
+  category: sequences
+  description: Remove contacts from a sequence, stopping all future outreach steps.
+- name: search_custom_object_records
+  category: custom-objects
+  description: Find records in a custom object by any field defined on that object.
+- name: create_custom_object_records
+  category: custom-objects
+  description: Create records in a custom object.
+- name: update_custom_object_records
+  category: custom-objects
+  description: Update fields on existing custom object records.
+- name: get_object_schema
+  category: custom-objects
+  description: List the custom-association relationships an admin created on a standard
+    or custom object.
+- name: search_users
+  category: workspace
+  description: Find users in your Reevo workspace by name, email, or role.
+- name: whoami
+  category: workspace
+  description: Return the connected user and organization context. Requires no scope.
+  scope_required: none
+safety:
+  irreversible_writes: true
+  note: Reevo's documentation states that every write action goes straight to the production
+    workspace and cannot be undone by Reevo, and that some actions have external effects
+    — enrolling contacts in a sequence sends real outreach emails.
+x-evidence:
+- fetched: '2026-08-13'
+  url: https://mcp.reevo.ai/
+  http_status: 200
+  note: Serves an HTML page titled "Reevo MCP" with meta description "Reevo MCP Server".
+- fetched: '2026-08-13'
+  url: https://mcp.reevo.ai/.well-known/oauth-authorization-server
+  http_status: 200
+  content_type: application/json
+- fetched: '2026-08-13'
+  url: https://mcp.reevo.ai/.well-known/oauth-protected-resource
+  http_status: 200
+  content_type: application/json
+- fetched: '2026-08-13'
+  url: https://mcp.reevo.ai/mcp
+  http_status: 401
+  method: POST tools/list
+  content_type: application/json

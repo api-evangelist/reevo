@@ -42,6 +42,21 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Reevo is a company surfaced as a portfolio company of kleiner-perkins and added to the API Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment pipeline.
+Reevo is an AI-native revenue operating system — a single platform spanning prospecting, outreach,
+dialing, meeting intelligence, pipeline management and forecasting, with a native CRM underneath.
 
-Backed by: kleiner-perkins — https://www.reevo.ai
+It ships two callable surfaces:
+
+- **Reevo Public REST API** — `https://api.reevo.ai/api/v1/public`, authenticated with an `x-api-key`
+  header carrying a workspace API key whose per-resource read/write permissions are chosen at
+  creation. Covers accounts, contacts, opportunities, tasks, manual activities, users, mailboxes and
+  sequence enrollments.
+- **Reevo MCP Server** — `https://mcp.reevo.ai/mcp`, a remote Model Context Protocol endpoint over
+  streamable-HTTP with OAuth 2.0, dynamic client registration and PKCE, exposing ~30 CRM tools under
+  22 granular `verb:object` scopes. Early access, enabled per organization by Reevo.
+
+Neither surface publishes an OpenAPI or AsyncAPI definition — the contract is documented in prose in
+the [Reevo Knowledge Base](https://help.reevo.ai). Reevo does publish an `llms.txt`, an A2A agent
+card and its own Agent Skill from `help.reevo.ai`; all three are captured verbatim here.
+
+Backed by: kleiner-perkins, khosla-ventures — https://www.reevo.ai

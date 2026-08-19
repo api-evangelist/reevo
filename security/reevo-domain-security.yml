@@ -1,11 +1,39 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
 - host: www.reevo.ai
   https: true
   tls_version: TLSv1.3
-  cert_expires: Aug 31 10:48:02 2026 GMT
+  cert_expires: Nov  1 23:17:44 2026 GMT
+  hsts: true
+  hsts_max_age: 63072000
+- host: help.reevo.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 27 01:39:46 2026 GMT
+  hsts: true
+  hsts_max_age: 63072000
+- host: api.reevo.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  8 23:59:59 2026 GMT
+  hsts: null
+- host: mcp.reevo.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 16 00:19:54 2026 GMT
+  hsts: false
+- host: login.reevo.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 29 09:34:06 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: app.reevo.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  8 23:59:59 2026 GMT
   hsts: true
   hsts_max_age: 63072000
 domains:

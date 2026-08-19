@@ -1,0 +1,57 @@
+generated: '2026-08-13'
+method: probed
+source: https://help.reevo.ai/.well-known/agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: help.reevo.ai
+  note: Served from Reevo's own knowledge-base host (help.reevo.ai, a Reevo-controlled
+    CNAME). The card names itself "Reevo Knowledge Base" and points every URL at help.reevo.ai,
+    so it describes Reevo's documentation agent surface rather than the Reevo product
+    API. The apex (reevo.ai), app.reevo.ai, api.reevo.ai, mcp.reevo.ai and login.reevo.ai
+    were all probed for both /.well-known/agent-card.json and the legacy /.well-known/agent.json;
+    only this path returned a real JSON AgentCard. app.reevo.ai answers 200 with an
+    HTML SPA shell for every /.well-known/* path and was rejected as a false positive.
+conformance:
+  spec: A2A 1.0.0
+  grade: near-conformant
+  protocol_version: '0.3'
+  preferred_transport: HTTP+JSON
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  deviations:
+  - supportedInterfaces-instead-of-additionalInterfaces
+  deviation_note: All three A2A 1.0.0 hard checks pass and the optional preferredTransport,
+    defaultInputModes and defaultOutputModes fields are present, but the card declares
+    its transport list under the pre-1.0 key `supportedInterfaces` rather than `additionalInterfaces`,
+    so it is graded near-conformant rather than conformant.
+card:
+  name: Reevo Knowledge Base
+  description: How to use Reevo
+  url: https://help.reevo.ai/
+  version: 1.0.0
+  provider_organization: Reevo Knowledge Base
+  documentation_url: https://help.reevo.ai/
+  capabilities:
+    streaming: false
+    push_notifications: false
+  default_input_modes:
+  - text/plain
+  default_output_modes:
+  - text/plain
+  skills: 1
+  skill_ids:
+  - reevoai
+  skill_documents:
+  - id: reevoai
+    url: https://help.reevo.ai/.well-known/agent-skills/reevoai/skill.md
+    saved_as: skills/reevo-reevoai.md
+  file: reevo-agent-card.json
+x-evidence:
+  fetched: '2026-08-13'
+  url: https://help.reevo.ai/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  size_bytes: 1054

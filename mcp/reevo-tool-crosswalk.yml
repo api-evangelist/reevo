@@ -1,0 +1,206 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/reevo-mcp.yml + https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+note: 'Reevo publishes no OpenAPI, so the REST side of this crosswalk is keyed by the
+  documented HTTP method + path under https://api.reevo.ai/api/v1/public rather than
+  by operationId. Live MCP tools/list is OAuth-gated (401 invalid_token), so tools
+  are mapped from Reevo''s published MCP tool list by name and semantics; confidence
+  is recorded honestly per row and no input schemas are asserted.'
+surfaces:
+  openapi: null
+  openapi_note: No OpenAPI or Swagger document is published on any Reevo host. Probed
+    api.reevo.ai /openapi.json, /openapi.yaml, /swagger.json, /api/openapi.json, /api/v1/openapi.json,
+    /api/v1/public/openapi.json, /api/docs, /api/v1/docs, /api/v1/public/docs, /redoc,
+    /api-docs and /api/schema — all 404 on 2026-08-13.
+  rest:
+    base_url: https://api.reevo.ai/api/v1/public
+    docs: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+    auth: x-api-key header
+    gated: false
+    note: Endpoint list is documented in prose; server responds (405 on GET /accounts,
+      422 missing x-api-key on POST /accounts/search).
+  graphql: null
+  mcp:
+    url: https://mcp.reevo.ai/mcp
+    transport: streamable-http
+    auth: oauth2
+    gated: true
+    gated_note: Anonymous tools/list returns HTTP 401 invalid_token; server is early-access
+      and enabled per organization.
+crosswalk:
+- tool: search_accounts
+  category: accounts
+  rest:
+  - POST /accounts/search
+  binding: rest
+  confidence: medium
+  note: The REST search endpoint filters on domain_name only; the MCP tool documents
+    a much wider filter set (name, owner, revenue, employee count, location, pipeline
+    stage, custom fields), so the MCP surface is broader than the documented REST one.
+- tool: get_accounts
+  category: accounts
+  rest:
+  - GET /accounts/{account_id}
+  binding: rest
+  confidence: high
+  note: MCP accepts one or more IDs; REST is single-ID.
+- tool: create_accounts
+  category: accounts
+  rest:
+  - POST /accounts
+  - POST /account_contact
+  binding: rest
+  confidence: high
+  note: POST /account_contact is the upsert variant that creates account and contact
+    together.
+- tool: update_accounts
+  category: accounts
+  rest:
+  - PATCH /accounts/{account_id}
+  binding: rest
+  confidence: high
+- tool: search_contacts
+  category: contacts
+  rest:
+  - POST /contacts/search
+  - GET /account_and_contact_retrieval
+  binding: rest
+  confidence: medium
+  note: REST search accepts contact_email and owner_email only; account_and_contact_retrieval
+    resolves by contact_email, account_domain or contact_phone_number.
+- tool: create_contacts
+  category: contacts
+  rest:
+  - POST /account_contact
+  binding: rest
+  confidence: medium
+  note: There is no standalone documented POST /contacts; contact creation is done
+    through the account_contact upsert.
+- tool: update_contacts
+  category: contacts
+  rest:
+  - POST /account_contact
+  binding: rest
+  confidence: low
+  note: The account_contact upsert updates an existing contact by email, but no dedicated
+    contact PATCH endpoint is documented.
+- tool: search_opportunities
+  category: opportunities
+  rest:
+  - POST /opportunities/search
+  binding: rest
+  confidence: high
+- tool: create_opportunities
+  category: opportunities
+  rest:
+  - POST /opportunities
+  binding: rest
+  confidence: high
+- tool: update_opportunities
+  category: opportunities
+  rest:
+  - PATCH /opportunities/{opportunity_id}
+  binding: rest
+  confidence: high
+  note: Both surfaces exclude stage from the generic update path.
+- tool: update_opportunity_stages
+  category: opportunities
+  rest:
+  - POST /opportunities/{opportunity_id}/shift_stage
+  binding: rest
+  confidence: high
+- tool: search_tasks
+  category: tasks
+  rest: []
+  binding: none
+  confidence: low
+  note: REST documents task creation only; no task search endpoint is published.
+- tool: create_tasks
+  category: tasks
+  rest:
+  - POST /tasks
+  binding: rest
+  confidence: high
+- tool: update_tasks
+  category: tasks
+  rest: []
+  binding: none
+  confidence: low
+  note: No documented REST task update endpoint.
+- tool: search_users
+  category: workspace
+  rest:
+  - POST /users/search
+  binding: rest
+  confidence: high
+- tool: list_mailboxes
+  category: email
+  rest:
+  - POST /mailboxes/search
+  binding: rest
+  confidence: medium
+  note: REST searches mailboxes by owner_user_email; the MCP tool lists the connected
+    user's sendable mailboxes with status and quota.
+- tool: enroll_in_sequence
+  category: sequences
+  rest:
+  - POST /sequence_enrollments
+  binding: rest
+  confidence: high
+  note: REST enrolls one contact per request.
+- tool: unenroll_from_sequence
+  category: sequences
+  rest: []
+  binding: none
+  confidence: low
+  note: No documented REST unenrollment endpoint.
+mcp_only:
+- tool: list_pipelines
+  reason: No public REST endpoint lists pipelines or their stages; pipeline_name and
+    stage_name are inputs to REST opportunity calls but cannot be enumerated over REST.
+- tool: search_meetings
+  reason: Meetings and recordings have no documented public REST surface.
+- tool: search_activity_timeline
+  reason: REST can only write manual activities; it cannot read a merged activity timeline.
+- tool: search_notes
+  reason: No documented public REST notes surface.
+- tool: create_notes
+  reason: No documented public REST notes surface; the nearest REST equivalent is POST
+    /manual_activities, which logs an activity rather than a note.
+- tool: search_email_threads
+  reason: Email threads have no documented public REST surface.
+- tool: search_sequences
+  reason: REST can enroll into a sequence by UUID but cannot list or search sequences.
+- tool: search_custom_object_records
+  reason: Custom objects have no documented public REST surface; REST exposes custom
+    fields only, as a dict on account/contact/opportunity payloads.
+- tool: create_custom_object_records
+  reason: Custom objects have no documented public REST surface.
+- tool: update_custom_object_records
+  reason: Custom objects have no documented public REST surface.
+- tool: get_object_schema
+  reason: No public REST schema/metadata endpoint is documented.
+- tool: whoami
+  reason: Identity of the caller is an MCP session concept; REST keys are workspace-scoped
+    API keys with no documented whoami endpoint.
+rest_only:
+- endpoints:
+  - POST /manual_activities
+  capability: Logging out-of-band touches (SMS, LinkedIn, social, event, conference,
+    webinar, call) against accounts, contacts, opportunities or sequences. No MCP tool
+    covers manual activity logging.
+- endpoints:
+  - GET /account_and_contact_retrieval
+  capability: Single-call exact-match retrieval of an account plus its contact by contact
+    email, account domain or contact phone number. MCP splits this across search_accounts
+    and search_contacts.
+coverage:
+  mcp_tools_named: 30
+  mcp_tools_bound_to_rest: 15
+  mcp_tools_unbound: 3
+  mcp_only: 12
+  rest_endpoints_documented: 17
+  rest_endpoints_with_a_tool: 15
+  rest_only_capabilities: 2
+  note: mcp_tools_unbound counts tools whose capability exists on the REST side conceptually
+    but has no documented endpoint (search_tasks, update_tasks, unenroll_from_sequence).

@@ -1,10 +1,34 @@
-generated: '2026-07-21'
+generated: '2026-08-13'
 method: searched
 source: https://www.reevo.ai/release-notes
 scheme: dated-feed
 current_version: null
-notes: Reevo publishes an undated-versioned, dated release-notes feed for its AI-native revenue platform (Find/Engage/Win/Foundation). Recent window captured below; the live feed is the source of truth.
+notes: Reevo publishes an unversioned, dated release-notes feed for its AI-native revenue platform (Find/Engage/Win/Foundation). Entries are product announcements, not API change records — no entry in the captured window names an API endpoint change, a breaking change or a deprecation. Recent window captured below; the live feed is the source of truth.
 entries:
+- date: '2026-07-28'
+  breaking: false
+  highlights:
+  - 'Live Web Prospecting with Ask Reevo: search the live web for prospects beyond database coverage and combine results with CRM data into verified prospect lists, in one conversation.'
+- date: '2026-07-22'
+  breaking: false
+  highlights:
+  - 'Microsoft Teams messaging for workflows: send automated DMs and post workflow updates to Teams channels after a one-time org setup.'
+- date: '2026-07-20'
+  breaking: false
+  highlights:
+  - 'Granola integration: meeting notes, transcripts and summaries sync within minutes, private by default, with hourly auto-sync.'
+- date: '2026-07-17'
+  breaking: false
+  highlights:
+  - 'MCP connectors for Ask Reevo: Notion, Linear, Pylon, PostHog and Google Drive generally available; the Slack connector available to beta customers.'
+- date: '2026-07-15'
+  breaking: false
+  highlights:
+  - 'Custom Relationships: one-to-one through many-to-many connections between CRM records, bulk CSV import, and querying through Ask Reevo.'
+- date: '2026-07-13'
+  breaking: false
+  highlights:
+  - 'Workflow folders: nested organization of automations by team, process or use case, with breadcrumbs and folder filtering.'
 - date: '2026-06-24'
   breaking: false
   highlights:

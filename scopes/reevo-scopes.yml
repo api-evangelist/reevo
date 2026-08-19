@@ -1,0 +1,161 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+docs: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+note: 'These are the OAuth 2.0 scopes Reevo''s MCP server requests at authorization,
+  transcribed from Reevo''s published MCP documentation. `derive-oauth-scopes.py` was
+  run first and produced nothing because the repo holds no OpenAPI. The MCP authorization-server
+  metadata document at https://mcp.reevo.ai/.well-known/oauth-authorization-server
+  does NOT publish a scopes_supported array, so this list cannot be confirmed mechanically
+  without an authorization round-trip against an enabled workspace. Scope naming is
+  verb:object. The public REST API at api.reevo.ai does not use OAuth — it uses per-key
+  read/write permissions recorded in authentication/reevo-authentication.yml.'
+schemes:
+- name: ReevoMCPOAuth
+  source: https://mcp.reevo.ai/.well-known/oauth-authorization-server
+  applies_to: https://mcp.reevo.ai/mcp
+  scopes_supported_published: false
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://mcp.reevo.ai/authorize
+    tokenUrl: https://mcp.reevo.ai/token
+    pkce: S256
+scope_count: 22
+scopes:
+- scope: read:account
+  description: Read accounts.
+  object: account
+  action: read
+  flows:
+  - authorizationCode
+- scope: create:account
+  description: Create accounts.
+  object: account
+  action: create
+  flows:
+  - authorizationCode
+- scope: update:account
+  description: Update existing accounts.
+  object: account
+  action: update
+  flows:
+  - authorizationCode
+- scope: read:contact
+  description: Read contacts.
+  object: contact
+  action: read
+  flows:
+  - authorizationCode
+- scope: create:contact
+  description: Create contacts.
+  object: contact
+  action: create
+  flows:
+  - authorizationCode
+- scope: update:contact
+  description: Update existing contacts.
+  object: contact
+  action: update
+  flows:
+  - authorizationCode
+- scope: read:opportunity
+  description: Read opportunities.
+  object: opportunity
+  action: read
+  flows:
+  - authorizationCode
+- scope: create:opportunity
+  description: Create opportunities.
+  object: opportunity
+  action: create
+  flows:
+  - authorizationCode
+- scope: update:opportunity
+  description: Update opportunities, including moving them between pipeline stages.
+  object: opportunity
+  action: update
+  flows:
+  - authorizationCode
+- scope: read:pipeline
+  description: Read the opportunity pipelines and their stages configured in the workspace.
+  object: pipeline
+  action: read
+  flows:
+  - authorizationCode
+- scope: read:meeting
+  description: Read meetings, including recording and transcript status.
+  object: meeting
+  action: read
+  flows:
+  - authorizationCode
+- scope: read:task
+  description: Read tasks.
+  object: task
+  action: read
+  flows:
+  - authorizationCode
+- scope: create:task
+  description: Create tasks.
+  object: task
+  action: create
+  flows:
+  - authorizationCode
+- scope: update:task
+  description: Update task status, owner, due date or description.
+  object: task
+  action: update
+  flows:
+  - authorizationCode
+- scope: read:note
+  description: Read notes.
+  object: note
+  action: read
+  flows:
+  - authorizationCode
+- scope: create:note
+  description: Log a note on an account, contact or opportunity.
+  object: note
+  action: create
+  flows:
+  - authorizationCode
+- scope: read:custom_object
+  description: Read records in custom objects.
+  object: custom_object
+  action: read
+  flows:
+  - authorizationCode
+- scope: create:custom_object
+  description: Create records in custom objects.
+  object: custom_object
+  action: create
+  flows:
+  - authorizationCode
+- scope: update:custom_object
+  description: Update records in custom objects.
+  object: custom_object
+  action: update
+  flows:
+  - authorizationCode
+- scope: read:sequence
+  description: Read sequences and their performance metrics.
+  object: sequence
+  action: read
+  flows:
+  - authorizationCode
+- scope: update:sequence
+  description: Enroll and unenroll contacts in sequences. Enrolling sends real outreach
+    email.
+  object: sequence
+  action: update
+  flows:
+  - authorizationCode
+- scope: read:email_account
+  description: List the email accounts the connected user can send from, with status
+    and quota.
+  object: email_account
+  action: read
+  flows:
+  - authorizationCode
+unscoped_tools:
+- tool: whoami
+  note: Documented as requiring no scope.

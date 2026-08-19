@@ -1,0 +1,140 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+docs:
+- https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+- https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+- https://help.reevo.ai/Automations-and-Workflows/Webhook-Trigger
+note: Cross-cutting runtime semantics for the Reevo public REST API, transcribed from
+  Reevo's documentation and confirmed with live unauthenticated probes. Reevo publishes
+  no OpenAPI, so nothing here is derived from a spec.
+api:
+  base_url: https://api.reevo.ai/api/v1/public
+  media_type: application/json
+  server: uvicorn (FastAPI); request validation errors use the FastAPI validation envelope
+authentication:
+  style: api-key-header
+  header: x-api-key
+  case_sensitivity: Reevo's own examples use both `x-api-key` and `X-Api-Key`, so the
+    header appears to be case-insensitive as HTTP requires.
+  scoping: per-key resource read/write permissions
+  detail: authentication/reevo-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  note: Reevo documents no idempotency key, no request-deduplication window and no
+    replay-safe retry contract on any endpoint. POST /account_contact is an upsert
+    keyed on the contact email, which makes that one call naturally repeatable, but
+    that is a resource semantic rather than an idempotency contract — POST /accounts,
+    POST /opportunities, POST /tasks, POST /manual_activities and POST /sequence_enrollments
+    have no documented protection against a duplicate submission, and enrolling twice
+    has a real-world side effect (outreach email). No Idempotency pointer is emitted
+    in apis.yml for this provider.
+pagination:
+  style: limit-offset
+  applies_to:
+  - POST /accounts/search
+  - POST /contacts/search
+  - POST /opportunities/search
+  request_params:
+  - name: limit
+    location: body
+    default_accounts: 100
+    default_contacts: 50
+    default_opportunities: 100
+  - name: offset
+    location: body
+    default: 0
+  response_fields: []
+  response_note: Search endpoints return a bare JSON array of records. No total count,
+    next-cursor, has_more or link header is documented or observable, so a client cannot
+    tell whether more results exist without requesting another page and checking for
+    an empty array.
+filtering:
+  style: POST body with typed fields per endpoint
+  note: Filters are endpoint-specific and narrow — accounts search by domain_name substring
+    only; contacts search by contact_email or owner_email (at least one required);
+    opportunities search by display_name, account_id, owner_email, status (PROSPECT
+    or DEAL) and stage_name.
+field_expansion:
+  supported: false
+  note: No expand/include/fields parameter is documented. Search responses return a
+    fixed record shape including custom_fields.
+metadata:
+  custom_fields:
+    supported: true
+    shape: 'dict[UUID | str, str | list[str]]'
+    keys: The custom field's API name (visible on hover in the settings screen where
+      the field was created) or its UUID.
+    fields:
+    - custom_fields
+    - account_custom_fields
+    - contact_custom_fields
+  arbitrary_metadata_bag: false
+request_tracing:
+  request_id_header: null
+  note: No request-id or correlation-id header is documented, and none was observed
+    on live 401/422 responses. There is no documented way for a caller to quote a request
+    identifier to support.
+versioning:
+  scheme: uri-path
+  current: v1
+  path_segment: /api/v1/public
+  note: Public surface is explicitly namespaced `public` beneath the version segment.
+    No version header, no dated version train and no documented version negotiation.
+  detail: lifecycle/reevo-lifecycle.yml
+error_envelope:
+  formats:
+  - status: 422
+    shape: FastAPI validation envelope
+    example: '{"detail":[{"type":"missing","loc":["header","x-api-key"],"msg":"Field
+      required","input":null}]}'
+  - status: 401
+    shape: Reevo error envelope
+    fields:
+    - error_response_type
+    - error
+    - message
+    - details
+    example: '{"error_response_type":"GENERIC","error":"UnauthorizedError","message":"Invalid
+      API key","details":null}'
+  - status: 404
+    shape: FastAPI default
+    example: '{"detail":"Not Found"}'
+  - status: 405
+    shape: FastAPI default
+    example: '{"detail":"Method Not Allowed"}'
+  rfc9457: false
+  problem_json: false
+  note: Two different envelopes are in play — framework-level validation errors use
+    `detail`, application-level errors use `error_response_type`/`error`/`message`/`details`.
+    A client must handle both. Neither is application/problem+json.
+  detail: errors/reevo-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  status_on_exhaustion: null
+  note: No X-RateLimit-*, RateLimit-* or Retry-After header is documented, and none
+    was observed on live responses. Reevo's documentation instead describes an organization-level
+    quota for public requests surfaced as an in-product warning, with "contact your
+    account manager" as the remedy.
+  detail: rate-limits/reevo-rate-limits.yml
+webhooks:
+  inbound: Workflows can be triggered by an HTTP POST of a JSON object to a per-workflow
+    unique URL, optionally protected by an API key. Reevo answers 200 when the webhook
+    is accepted and queued, not when the workflow completes.
+  outbound: A Webhook action node inside a workflow sends an HTTP request to an external
+    endpoint.
+  detail: asyncapi/reevo-webhooks.yml
+query_conventions:
+- name: payload_type
+  location: query
+  value: json
+  note: Documented as a required query parameter when configuring an external tool's
+    HTTP call into Reevo.
+gaps:
+- No idempotency contract on write endpoints that have real-world side effects.
+- No request-id / correlation-id on any response.
+- No pagination metadata (total, has_more, next cursor) on search responses.
+- No rate-limit response headers.
+- Two inconsistent error envelopes across the same base path.
+- No OpenAPI, so none of the above is machine-readable.

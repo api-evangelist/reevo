@@ -1,0 +1,152 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+docs:
+- https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+- https://help.reevo.ai/AI-and-productivity/Reevo-MCP
+note: Reevo publishes no OpenAPI, so this profile is transcribed from the provider's
+  own documentation and confirmed against live unauthenticated probes of api.reevo.ai
+  and mcp.reevo.ai. `derive-authentication.py` was run first and produced nothing (0
+  spec files in openapi/).
+summary:
+  types:
+  - apiKey
+  - oauth2
+  - openIdConnect
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter_name: x-api-key
+  applies_to: https://api.reevo.ai/api/v1/public
+  source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  issuance:
+    where: Reevo workspace Settings -> Integrations -> API Keys -> New API key
+    url: https://app.reevo.ai/settings/integrations
+    who: workspace admins only
+    prerequisite: The organization must have available quota for public requests.
+    visibility: The key is shown exactly once at creation and cannot be retrieved again.
+    revocation: Keys are expired from the API keys table (three-dot menu -> Expire
+      key); an expired key stops working immediately.
+    rotation_policy: null
+  authorization_model:
+    style: per-resource read/write permissions selected at key creation
+    inheritance: A write permission automatically grants read on the same resource.
+    enforcement: The service validates on every request that the key carries the required
+      permissions and rejects the call with an error naming the missing permissions.
+    permissions:
+    - resource: Accounts
+      read: true
+      write: true
+    - resource: Contacts
+      read: true
+      write: true
+    - resource: Opportunities
+      read: true
+      write: true
+    - resource: Tasks
+      read: true
+      write: true
+    - resource: Activities
+      read: false
+      write: true
+    - resource: Users
+      read: true
+      write: false
+    - resource: Mailbox
+      read: true
+      write: false
+    - resource: Sequence Enrollment
+      read: true
+      write: true
+    - resource: Webhooks
+      read: true
+      write: true
+  observed:
+    missing_key_status: 422
+    missing_key_body: '{"detail":[{"type":"missing","loc":["header","x-api-key"],"msg":"Field
+      required","input":null}]}'
+    invalid_key_status: 401
+    invalid_key_body: '{"error_response_type":"GENERIC","error":"UnauthorizedError","message":"Invalid
+      API key","details":null}'
+    probed: '2026-08-13'
+    probe_url: https://api.reevo.ai/api/v1/public/accounts/search
+- name: ReevoMCPOAuth
+  type: oauth2
+  applies_to: https://mcp.reevo.ai/mcp
+  source: https://mcp.reevo.ai/.well-known/oauth-authorization-server
+  metadata_documents:
+  - https://mcp.reevo.ai/.well-known/oauth-authorization-server
+  - https://mcp.reevo.ai/.well-known/oauth-protected-resource
+  issuer: https://mcp.reevo.ai
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://mcp.reevo.ai/authorize
+    tokenUrl: https://mcp.reevo.ai/token
+    refreshUrl: https://mcp.reevo.ai/token
+    scopes: scopes/reevo-scopes.yml
+  registration_endpoint: https://mcp.reevo.ai/register
+  revocation_endpoint: https://mcp.reevo.ai/token
+  dynamic_client_registration: true
+  pkce:
+    required: true
+    code_challenge_methods:
+    - S256
+  token_endpoint_auth_methods:
+  - client_secret_basic
+  - client_secret_post
+  - none
+  bearer_methods_supported:
+  - header
+  protected_resource: https://mcp.reevo.ai
+  authorization_servers:
+  - https://mcp.reevo.ai
+  resource_documentation: https://reevo.ai
+  note: Consent is per-scope; Reevo's authorization page shows exactly which object/action
+    scopes a client requested and a tool can only run if that scope was granted. Tokens
+    act as the connected Reevo user and inherit that user's workspace permissions.
+- name: ReevoLogin
+  type: openIdConnect
+  applies_to: https://app.reevo.ai (end-user sign-in, not an API surface)
+  openIdConnectUrl: https://login.reevo.ai/.well-known/openid-configuration
+  source: https://login.reevo.ai/.well-known/openid-configuration
+  issuer: https://login.reevo.ai/
+  authorization_endpoint: https://login.reevo.ai/authorize
+  token_endpoint: https://login.reevo.ai/oauth/token
+  userinfo_endpoint: https://login.reevo.ai/userinfo
+  jwks_uri: https://login.reevo.ai/.well-known/jwks.json
+  device_authorization_endpoint: https://login.reevo.ai/oauth/device/code
+  revocation_endpoint: https://login.reevo.ai/oauth/revoke
+  registration_endpoint: https://login.reevo.ai/oidc/register
+  mfa_challenge_endpoint: https://login.reevo.ai/mfa/challenge
+  code_challenge_methods:
+  - S256
+  - plain
+  scopes_supported:
+  - openid
+  - profile
+  - offline_access
+  - name
+  - given_name
+  - family_name
+  - nickname
+  - email
+  - email_verified
+  - picture
+  - created_at
+  - identities
+  - phone
+  - address
+  note: Standard OIDC discovery for Reevo's identity host. It authenticates humans
+    into the Reevo web app; it is not the authorization server for either the public
+    REST API (x-api-key) or the MCP server (which runs its own issuer at mcp.reevo.ai).
+    Third-party sign-in with Microsoft is documented as an option.
+gaps:
+- No OpenAPI securitySchemes block exists, so no machine-readable auth contract is
+  published for the REST API.
+- No documented API key rotation policy, key expiry period, or IP allow-listing.
+- No mTLS, HTTP basic or bearer-JWT option is documented for the REST API.

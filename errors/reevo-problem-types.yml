@@ -1,0 +1,124 @@
+generated: '2026-08-13'
+method: probed
+source: live unauthenticated probes of https://api.reevo.ai/api/v1/public on 2026-08-13
+  plus https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+format: vendor
+rfc9457: false
+note: Reevo publishes no OpenAPI and no error-code reference page, so this catalog
+  is built from error responses observed live on the public API plus the failure conditions
+  Reevo describes in prose. It is deliberately short — it records what is verifiable,
+  not an invented registry.
+envelopes:
+- name: fastapi-validation
+  media_type: application/json
+  schema:
+    detail: array of {type, loc, msg, input}
+  seen_on:
+  - 422
+- name: reevo-generic
+  media_type: application/json
+  schema:
+    error_response_type: string enum (observed value GENERIC)
+    error: string error class name (observed value UnauthorizedError)
+    message: human-readable string
+    details: nullable
+  seen_on:
+  - 401
+- name: fastapi-default
+  media_type: application/json
+  schema:
+    detail: string
+  seen_on:
+  - 404
+  - 405
+problems:
+- status: 422
+  title: Missing required header
+  envelope: fastapi-validation
+  body: '{"detail":[{"type":"missing","loc":["header","x-api-key"],"msg":"Field required","input":null}]}'
+  remediation: Send the x-api-key header with a live workspace API key.
+  evidence:
+    method: POST
+    url: https://api.reevo.ai/api/v1/public/accounts/search
+    observed: '2026-08-13'
+- status: 422
+  title: Request body validation failure
+  envelope: fastapi-validation
+  remediation: Correct the offending field named in detail[].loc. Documented required
+    fields include email on account_contact, name on account create, display_name and
+    account_id on opportunity create, title and owner_email on task create, target_stage_name
+    on shift_stage, and contact_email plus sequence_id on sequence enrollment.
+  note: Inferred from the same FastAPI validation machinery that produced the observed
+    missing-header 422; not separately observed.
+- status: 401
+  title: Invalid API key
+  envelope: reevo-generic
+  error: UnauthorizedError
+  body: '{"error_response_type":"GENERIC","error":"UnauthorizedError","message":"Invalid
+    API key","details":null}'
+  remediation: Generate a new key in Settings -> Integrations -> API Keys. Keys are
+    shown once at creation and cannot be recovered.
+  evidence:
+    method: POST
+    url: https://api.reevo.ai/api/v1/public/accounts/search
+    observed: '2026-08-13'
+- status: 401
+  title: API key has expired
+  envelope: reevo-generic
+  documented_message: API key has expired
+  remediation: Generate a replacement key and update the integration; expired keys
+    stop working immediately.
+  source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  note: Message text is quoted from Reevo's documentation; the exact status code was
+    not observed.
+- status: null
+  title: Insufficient key permissions
+  envelope: reevo-generic
+  remediation: Recreate the key with the read/write permissions the call requires.
+    Write permission implies read on the same resource.
+  documented_behaviour: Reevo states the request is rejected with a clear error message
+    indicating which permissions are missing.
+  source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  note: Status code not documented and not observable without a valid under-scoped
+    key.
+- status: null
+  title: Public request quota exceeded
+  envelope: unknown
+  remediation: Contact the Reevo account manager to raise the organization's public
+    request limits.
+  source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  note: Reevo describes a quota warning rather than an HTTP error; no status code,
+    body or Retry-After is documented.
+- status: 404
+  title: Not Found
+  envelope: fastapi-default
+  body: '{"detail":"Not Found"}'
+  evidence:
+    method: GET
+    url: https://api.reevo.ai/api/v1/public/
+    observed: '2026-08-13'
+- status: 405
+  title: Method Not Allowed
+  envelope: fastapi-default
+  body: '{"detail":"Method Not Allowed"}'
+  evidence:
+    method: GET
+    url: https://api.reevo.ai/api/v1/public/accounts
+    observed: '2026-08-13'
+mcp_errors:
+- status: 401
+  surface: https://mcp.reevo.ai/mcp
+  body: '{"error":"invalid_token","error_description":"Missing or invalid access token"}'
+  remediation: Complete the OAuth 2.0 authorization-code flow against https://mcp.reevo.ai/authorize.
+    Access is early-access; workspaces Reevo has not enabled fail at authorization.
+  evidence:
+    method: POST tools/list
+    url: https://mcp.reevo.ai/mcp
+    observed: '2026-08-13'
+gaps:
+- No published error-code reference page for the REST API.
+- No stable machine-readable error `code` field — callers must match on the `error`
+  class name string.
+- Two envelope shapes on one base path.
+- Permission-denied and quota-exceeded responses are described in prose without status
+  codes or bodies.

@@ -1,0 +1,369 @@
+generated: '2026-08-13'
+method: derived
+source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+also_from:
+- mcp/reevo-mcp.yml
+- https://help.reevo.ai/Automations-and-Workflows/Workflow-Triggers
+note: 'Derived from the request/response payload field lists Reevo publishes for each
+  public REST endpoint, plus the object vocabulary of the MCP tool set and workflow
+  triggers. There is no OpenAPI to walk, so relationships come from id-reference and
+  email-reference fields named in the documented payloads. Field lists are the documented
+  subset a public API caller can set or read — not the full internal schema.'
+identifiers:
+  primary: UUID
+  note: Accounts, opportunities, contacts, sequences and custom object records are
+    addressed by UUID. There are no typed/prefixed ids. Several endpoints accept a
+    natural key instead of a UUID — email for contacts and users, owner_email for ownership,
+    domain_name for accounts, pipeline_name and stage_name for pipeline position, opportunity_name
+    on task creation.
+entities:
+- name: account
+  description: A company record in the Reevo CRM.
+  rest_endpoints:
+  - POST /accounts
+  - PATCH /accounts/{account_id}
+  - GET /accounts/{account_id}
+  - POST /accounts/search
+  - POST /account_contact
+  - GET /account_and_contact_retrieval
+  fields:
+  - id
+  - name
+  - status
+  - official_website
+  - domain_name
+  - linkedin_url
+  - facebook_url
+  - zoominfo_url
+  - x_url
+  - owner_email
+  - custom_fields
+  enums:
+    status:
+    - CUSTOMER
+    status_note: CUSTOMER observed in Reevo's published example response; the full
+      enum is not documented.
+- name: contact
+  description: A person record, normally linked to an account.
+  rest_endpoints:
+  - GET /contacts/{contact_id}
+  - POST /contacts/search
+  - POST /account_contact
+  - GET /account_and_contact_retrieval
+  fields:
+  - id
+  - email
+  - first_name
+  - middle_name
+  - last_name
+  - phone_number
+  - company
+  - title
+  - department
+  - contact_linkedin_url
+  - contact_facebook_url
+  - contact_zoominfo_url
+  - contact_x_url
+  - contact_owner_email
+  - contact_custom_fields
+- name: opportunity
+  description: A deal or prospect on a pipeline.
+  rest_endpoints:
+  - POST /opportunities
+  - PATCH /opportunities/{opportunity_id}
+  - GET /opportunities/{opportunity_id}
+  - POST /opportunities/search
+  - POST /opportunities/{opportunity_id}/shift_stage
+  fields:
+  - id
+  - display_name
+  - account_id
+  - owner_email
+  - primary_contact_email
+  - additional_contact_emails
+  - amount
+  - pipeline_name
+  - stage_name
+  - status
+  - next_step_details
+  - next_step_due_at
+  - closed_reason_names
+  - closed_reason_custom_detail
+  - custom_fields
+  enums:
+    status:
+    - PROSPECT
+    - DEAL
+  note: Stage cannot be changed through the generic PATCH; it moves only through the
+    shift_stage endpoint, and closed_reason_names is required when moving to a closed
+    stage.
+- name: pipeline
+  description: An ordered set of stages that opportunities move through.
+  rest_endpoints: []
+  mcp_tools:
+  - list_pipelines
+  fields:
+  - name
+  - stages
+  note: Referenced from opportunities by pipeline_name and stage_name but not enumerable
+    over the public REST API.
+- name: task
+  description: A to-do assigned to a user, optionally attached to CRM records.
+  rest_endpoints:
+  - POST /tasks
+  fields:
+  - title
+  - owner_email
+  - status
+  - priority
+  - type
+  - due_at
+  - note
+  - account_id
+  - contact_emails
+  - opportunity_name
+  enums:
+    status:
+    - OPEN
+    - IN_PROGRESS
+    - BLOCKED
+    - COMPLETED
+    - CLOSED
+    priority:
+    - URGENT
+    - HIGH
+    - MEDIUM
+    - LOW
+    type:
+    - ACTION_ITEM
+    - LINKEDIN_MESSAGE
+    - REMINDER
+    - SCHEDULING
+    - EMAIL
+    - VOICE_CALL
+    - LINKEDIN_CONNECT_REQUEST
+    - SMS_MESSAGE
+    - CUSTOM_TASK
+  defaults:
+    status: OPEN
+    priority: MEDIUM
+    type: REMINDER
+- name: manual_activity
+  description: A logged out-of-band touch (SMS, LinkedIn, social, event, call) recorded
+    against CRM records.
+  rest_endpoints:
+  - POST /manual_activities
+  fields:
+  - metadata.activity_time
+  - metadata.subject
+  - metadata.description
+  - metadata.category
+  - account_id
+  - contact_ids
+  - pipeline_id
+  - sequence_id
+  enums:
+    metadata.category:
+    - TEXT
+    - LINKEDIN
+    - SOCIAL_MEDIA
+    - EVENT
+    - CONFERENCE
+    - WEBINAR
+    - CALL
+    - OTHER
+  defaults:
+    metadata.category: OTHER
+  note: The field named pipeline_id on this payload is documented as the associated
+    opportunity ID, not a pipeline ID — a naming collision worth flagging to any integrator.
+- name: user
+  description: A member of the Reevo workspace.
+  rest_endpoints:
+  - POST /users/search
+  fields:
+  - email
+  note: Users are the ownership anchor across accounts, contacts, opportunities, tasks
+    and mailboxes, always referenced by email rather than by id.
+- name: mailbox
+  description: A connected sending email account.
+  rest_endpoints:
+  - POST /mailboxes/search
+  fields:
+  - owner_user_email
+  mcp_tools:
+  - list_mailboxes
+  note: MCP exposes status and quota per mailbox; the REST search is by owner email
+    only.
+- name: sequence
+  description: A multi-step outreach campaign.
+  rest_endpoints: []
+  mcp_tools:
+  - search_sequences
+  fields:
+  - id
+  - owner
+  - status
+  enums:
+    status:
+    - DRAFT
+    - ACTIVE
+    - INACTIVE
+    - TERMINATED
+  note: Not listable over REST; a caller must already hold the sequence UUID to enroll.
+- name: sequence_enrollment
+  description: One contact's membership in one sequence.
+  rest_endpoints:
+  - POST /sequence_enrollments
+  fields:
+  - contact_email
+  - sequence_id
+  - mailbox_email
+  note: One contact per request. If mailbox_email is omitted Reevo picks a random mailbox
+    belonging to the contact's CRM owner. Enrollment sends real outreach email.
+- name: meeting
+  description: A calendar meeting with optional recording and transcript.
+  rest_endpoints: []
+  mcp_tools:
+  - search_meetings
+- name: note
+  description: Free text logged against an account, contact or opportunity.
+  rest_endpoints: []
+  mcp_tools:
+  - search_notes
+  - create_notes
+- name: email_thread
+  description: An email conversation associated with CRM records.
+  rest_endpoints: []
+  mcp_tools:
+  - search_email_threads
+- name: custom_object
+  description: An admin-defined object type with its own fields and relationships.
+  rest_endpoints: []
+  mcp_tools:
+  - search_custom_object_records
+  - create_custom_object_records
+  - update_custom_object_records
+  - get_object_schema
+- name: relationship
+  description: An admin-configured association between two records (one-to-one through
+    many-to-many).
+  rest_endpoints: []
+  note: Surfaced through workflow triggers (Relationship Created/Updated) and through
+    the MCP get_object_schema tool; no public REST surface.
+relationships:
+- from: opportunity
+  to: account
+  cardinality: belongs_to
+  via: account_id
+  required: true
+- from: opportunity
+  to: contact
+  cardinality: has_one
+  via: primary_contact_email
+- from: opportunity
+  to: contact
+  cardinality: has_many
+  via: additional_contact_emails
+- from: opportunity
+  to: pipeline
+  cardinality: belongs_to
+  via: pipeline_name
+- from: opportunity
+  to: user
+  cardinality: belongs_to
+  via: owner_email
+- from: contact
+  to: account
+  cardinality: belongs_to
+  via: account_contact upsert (company / account_website / account_linkedin_url)
+- from: contact
+  to: user
+  cardinality: belongs_to
+  via: contact_owner_email
+- from: account
+  to: user
+  cardinality: belongs_to
+  via: owner_email
+- from: account
+  to: contact
+  cardinality: has_many
+  via: account_contact upsert
+- from: task
+  to: account
+  cardinality: belongs_to
+  via: account_id
+- from: task
+  to: contact
+  cardinality: has_many
+  via: contact_emails
+- from: task
+  to: opportunity
+  cardinality: belongs_to
+  via: opportunity_name
+- from: task
+  to: user
+  cardinality: belongs_to
+  via: owner_email
+- from: manual_activity
+  to: account
+  cardinality: belongs_to
+  via: account_id
+- from: manual_activity
+  to: contact
+  cardinality: has_many
+  via: contact_ids
+- from: manual_activity
+  to: opportunity
+  cardinality: belongs_to
+  via: pipeline_id
+- from: manual_activity
+  to: sequence
+  cardinality: belongs_to
+  via: sequence_id
+- from: sequence_enrollment
+  to: contact
+  cardinality: belongs_to
+  via: contact_email
+- from: sequence_enrollment
+  to: sequence
+  cardinality: belongs_to
+  via: sequence_id
+- from: sequence_enrollment
+  to: mailbox
+  cardinality: belongs_to
+  via: mailbox_email
+- from: mailbox
+  to: user
+  cardinality: belongs_to
+  via: owner_user_email
+extensibility:
+  custom_fields:
+    on:
+    - account
+    - contact
+    - opportunity
+    shape: 'dict[UUID | str, str | list[str]]'
+    types:
+    - text single line
+    - text multi line
+    - url
+    - number
+    - date
+    - single-select
+    - multi-select
+    - boolean
+    - amount/currency
+    unique_capable:
+    - text single line
+    - text multi line
+    - url
+    - number
+    - amount/currency
+  custom_objects: true
+  custom_relationships: true
+render: null
+gaps:
+- No OpenAPI, so no machine-readable schema, no $ref graph and no response schemas.
+- Search response shapes are published only as one example array for accounts; contacts,
+  opportunities, users and mailboxes have no documented response body.
+- Enum values for account.status are incomplete.

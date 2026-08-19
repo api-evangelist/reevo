@@ -1,0 +1,73 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+docs:
+- https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+- https://www.reevo.ai/pricing
+limit_count: 0
+note: 'Reevo publishes no numeric rate limit for the public REST API or the MCP server.
+  What it publishes instead is an organization-level QUOTA on "public requests" that
+  is a precondition for creating an API key at all, plus a per-org monthly workflow-credit
+  allowance on the pricing page. Neither is expressed as requests per unit time, neither
+  has a published value, and neither is signalled at runtime: no rate-limit response
+  headers are documented, and none were observed on live 401/422/404/405 responses
+  from api.reevo.ai on 2026-08-13. An agent has no runtime signal telling it how close
+  it is to the limit or when to retry.'
+limits: []
+quotas:
+- name: public requests
+  scope: per organization
+  window: null
+  value: null
+  source: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
+  documented_behaviour: 'Reevo lists "Your organization must have available quota for
+    public requests" as a prerequisite for creating an API key, and answers the FAQ
+    "I''m seeing a quota warning. What does that mean?" with: "Your organization has
+    limits on public requests. If you''re approaching or exceeding your quota, contact
+    your account manager to discuss increasing your limits."'
+  surfaced_as: in-product warning
+  remedy: contact your account manager
+- name: workflow credits
+  scope: per organization per month
+  window: monthly
+  value_core: 20000
+  value_pro: 40000
+  value_enterprise: custom
+  source: https://www.reevo.ai/pricing
+  note: Consumed by workflow execution, which includes inbound webhook-triggered runs
+    and outbound webhook action nodes. Not a REST API rate limit, but it is the only
+    published number that bounds automated call volume through Reevo.
+response_headers:
+  documented: []
+  observed: []
+  probed:
+  - url: https://api.reevo.ai/api/v1/public/accounts/search
+    method: POST
+    status: 422
+    rate_limit_headers: none
+    observed: '2026-08-13'
+  - url: https://api.reevo.ai/api/v1/public/accounts/search
+    method: POST
+    status: 401
+    rate_limit_headers: none
+    observed: '2026-08-13'
+  - url: https://api.reevo.ai/api/v1/public/accounts
+    method: GET
+    status: 405
+    rate_limit_headers: none
+    observed: '2026-08-13'
+  note: No X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset, no RFC-draft
+    RateLimit-* and no Retry-After on any observed response.
+status_on_exhaustion: null
+status_on_exhaustion_note: Not documented. Reevo describes the quota breach as a warning
+  and an account-manager conversation, never as an HTTP status.
+mcp:
+  surface: https://mcp.reevo.ai/mcp
+  limits: []
+  note: Reevo's MCP documentation publishes no rate limits. Access itself is the gate
+    — the server is early-access and only organizations Reevo has enabled can authorize.
+gaps:
+- No numeric request-rate limit published for any surface.
+- No rate-limit response headers, so no runtime backpressure signal for an agent.
+- No documented status code or Retry-After on exhaustion.
+- The one published quota ("public requests") has no value and no window.
