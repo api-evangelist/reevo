@@ -26,19 +26,17 @@ accessModel:
   method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/reevo.png
 name: Reevo
-description: 'Reevo is an AI-native revenue platform ("revenue operating system") that
-  consolidates the sales workflow into one system across four products: Find (lead
-  sourcing, enrichment, routing and scoring), Engage (email sequences, dialing, inbox
-  and meeting prep), Win (deal monitoring, smart task logging and coaching) and Foundation
-  (a native CRM with an AI copilot, reporting, workflows and integrations). It helps
-  GTM teams eliminate tool sprawl and automate repetitive sales work. Backed by Kleiner
-  Perkins and Khosla Ventures. Reevo ships two callable surfaces: a permission-scoped
-  public REST API at https://api.reevo.ai/api/v1/public authenticated with an x-api-key
-  header (accounts, contacts, opportunities, tasks, manual activities, users, mailboxes
-  and sequence enrollments), and a remote Model Context Protocol server at https://mcp.reevo.ai/mcp
-  that exposes roughly 30 CRM tools over streamable-HTTP with OAuth 2.0 and granular
-  read/create/update scopes. Neither surface publishes an OpenAPI or AsyncAPI definition
-  — the contract is documented in prose in the Reevo Knowledge Base.'
+description: 'Reevo is an AI-native revenue platform ("revenue operating system") that consolidates the
+  sales workflow into one system across four products: Find (lead sourcing, enrichment, routing and scoring),
+  Engage (email sequences, dialing, inbox and meeting prep), Win (deal monitoring, smart task logging
+  and coaching) and Foundation (a native CRM with an AI copilot, reporting, workflows and integrations).
+  It helps GTM teams eliminate tool sprawl and automate repetitive sales work. Backed by Kleiner Perkins
+  and Khosla Ventures. Reevo ships two callable surfaces: a permission-scoped public REST API at https://api.reevo.ai/api/v1/public
+  authenticated with an x-api-key header (accounts, contacts, opportunities, tasks, manual activities,
+  users, mailboxes and sequence enrollments), and a remote Model Context Protocol server at https://mcp.reevo.ai/mcp
+  that exposes roughly 30 CRM tools over streamable-HTTP with OAuth 2.0 and granular read/create/update
+  scopes. Neither surface publishes an OpenAPI or AsyncAPI definition — the contract is documented in
+  prose in the Reevo Knowledge Base.'
 url: https://raw.githubusercontent.com/api-evangelist/reevo/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -73,15 +71,14 @@ tags_raw:
 - MCP
 - Sales Engagement
 apis:
-- aid: reevo-public-rest-api
+- aid: reevo:reevo-public-rest-api
   name: Reevo Public REST API
-  description: 'Reevo''s permission-scoped public REST API. Endpoints cover account
-    and contact upsert, accounts (create/update/get/search-by-domain), contacts (get/search),
-    opportunities (create/update/get/search/shift-stage), tasks, manual activities,
-    user search, mailbox search, sequence enrollment and combined account-and-contact
-    retrieval. Authentication is an x-api-key header carrying a workspace API key whose
-    per-resource read/write permissions are chosen at creation time. The service is
-    a FastAPI/uvicorn application; no OpenAPI definition is published.'
+  description: Reevo's permission-scoped public REST API. Endpoints cover account and contact upsert,
+    accounts (create/update/get/search-by-domain), contacts (get/search), opportunities (create/update/get/search/shift-stage),
+    tasks, manual activities, user search, mailbox search, sequence enrollment and combined account-and-contact
+    retrieval. Authentication is an x-api-key header carrying a workspace API key whose per-resource read/write
+    permissions are chosen at creation time. The service is a FastAPI/uvicorn application; no OpenAPI
+    definition is published.
   humanURL: https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools
   baseURL: https://api.reevo.ai/api/v1/public
   tags:
@@ -99,16 +96,15 @@ apis:
     url: conventions/reevo-conventions.yml
   - type: DataModel
     url: data-model/reevo-data-model.yml
-- aid: reevo-mcp-server
+- aid: reevo:reevo-mcp-server
   name: Reevo MCP Server
-  description: 'Reevo''s remote Model Context Protocol server. An MCP client POSTs
-    to https://mcp.reevo.ai/mcp over MCP streamable-HTTP transport with OAuth 2.0 authorization
-    (dynamic client registration, PKCE S256). It exposes roughly 30 tools across accounts,
-    contacts, opportunities and pipelines, meetings, activity timeline, tasks, notes,
-    email threads and mailboxes, sequences, custom objects and object schema, plus
-    user search and whoami. Every call runs as the connected Reevo user and respects
-    that user''s existing permissions; write tools act directly on the production workspace.
-    Access is early-access and enabled per organization by Reevo.'
+  description: Reevo's remote Model Context Protocol server. An MCP client POSTs to https://mcp.reevo.ai/mcp
+    over MCP streamable-HTTP transport with OAuth 2.0 authorization (dynamic client registration, PKCE
+    S256). It exposes roughly 30 tools across accounts, contacts, opportunities and pipelines, meetings,
+    activity timeline, tasks, notes, email threads and mailboxes, sequences, custom objects and object
+    schema, plus user search and whoami. Every call runs as the connected Reevo user and respects that
+    user's existing permissions; write tools act directly on the production workspace. Access is early-access
+    and enabled per organization by Reevo.
   humanURL: https://help.reevo.ai/AI-and-productivity/Reevo-MCP
   baseURL: https://mcp.reevo.ai/mcp
   tags:
