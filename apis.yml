@@ -59,6 +59,7 @@ tags:
 - Agents
 - MCP
 - Sales Engagement
+- A2A
 tags_raw:
 - Company
 - Ai
@@ -70,6 +71,7 @@ tags_raw:
 - Agents
 - MCP
 - Sales Engagement
+- A2A
 apis:
 - aid: reevo:reevo-public-rest-api
   name: Reevo Public REST API
@@ -195,3 +197,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 21
   pass: local-v1
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://help.reevo.ai/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3"
+  control: 404
