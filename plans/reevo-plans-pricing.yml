@@ -143,3 +143,28 @@ api_access:
     independent of plan.
   quota_metric_for_api: public requests
   quota_value: null
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  units: []
+  plans:
+  - name: Core
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Pro
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Enterprise
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
