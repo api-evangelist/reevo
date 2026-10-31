@@ -64,21 +64,128 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Reevo is an AI-native revenue operating system — a single platform spanning prospecting, outreach,
-dialing, meeting intelligence, pipeline management and forecasting, with a native CRM underneath.
+Reevo is an AI-native revenue platform ("revenue operating system") that consolidates the sales workflow into one system across four products: Find (lead sourcing, enrichment, routing and scoring), Engage (email sequences, dialing, inbox and meeting prep), Win (deal monitoring, smart task logging and coaching) and Foundation (a native CRM with an AI copilot, reporting, workflows and integrations). It helps GTM teams eliminate tool sprawl and automate repetitive sales work. Backed by Kleiner Perkins and Khosla Ventures. Reevo ships two callable surfaces: a permission-scoped public REST API at https://api.reevo.ai/api/v1/public authenticated with an x-api-key header (accounts, contacts, opportunities, tasks, manual activities, users, mailboxes and sequence enrollments), and a remote Model Context Protocol server at https://mcp.reevo.ai/mcp that exposes roughly 30 CRM tools over streamable-HTTP with OAuth 2.0 and granular read/create/update scopes. Neither surface publishes an OpenAPI or AsyncAPI definition — the contract is documented in prose in the Reevo Knowledge Base.
 
-It ships two callable surfaces:
+**Areas:** Company · Artificial Intelligence · Sales · CRM · Revenue Operations · Sales Automation · Lead Generation · Agents · MCP · Sales Engagement · A2A
 
-- **Reevo Public REST API** — `https://api.reevo.ai/api/v1/public`, authenticated with an `x-api-key`
-  header carrying a workspace API key whose per-resource read/write permissions are chosen at
-  creation. Covers accounts, contacts, opportunities, tasks, manual activities, users, mailboxes and
-  sequence enrollments.
-- **Reevo MCP Server** — `https://mcp.reevo.ai/mcp`, a remote Model Context Protocol endpoint over
-  streamable-HTTP with OAuth 2.0, dynamic client registration and PKCE, exposing ~30 CRM tools under
-  22 granular `verb:object` scopes. Early access, enabled per organization by Reevo.
+## Reevo on APIs.io
 
-Neither surface publishes an OpenAPI or AsyncAPI definition — the contract is documented in prose in
-the [Reevo Knowledge Base](https://help.reevo.ai). Reevo does publish an `llms.txt`, an A2A agent
-card and its own Agent Skill from `help.reevo.ai`; all three are captured verbatim here.
+Everything profiled for Reevo is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/reevo/](https://apis.io/providers/reevo/)** — or go straight to one of the APIs or properties below.
 
-Backed by: kleiner-perkins, khosla-ventures — https://www.reevo.ai
+### APIs (2)
+
+- [Reevo Public REST API](https://apis.io/apis/reevo/reevo-public-rest-api/) — Reevo's permission-scoped public REST API. Endpoints cover account and contact upsert, accounts (create/update/get/search-by-domain), contacts (get/search),…
+- [Reevo MCP Server](https://apis.io/apis/reevo/reevo-mcp-server/) — Reevo's remote Model Context Protocol server. An MCP client POSTs to https://mcp.reevo.ai/mcp over MCP streamable-HTTP transport with OAuth 2.0…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Reevo Webhooks](https://apis.io/asyncapis/reevo/reevo-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Reevo MCP](https://apis.io/servers/reevo/reevo-mcp/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Reevo Authentication](https://apis.io/security/reevo/reevo-authentication/)
+- [Reevo Domain Security](https://apis.io/security/reevo/reevo-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Reevo Scopes](https://apis.io/scopes/reevo/reevo-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Reevo Plans Pricing](https://apis.io/plans/reevo/reevo-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Reevo Rate Limits](https://apis.io/rate-limits/reevo/reevo-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.reevo.ai)
+- [Documentation](https://help.reevo.ai)
+- [Getting started](https://help.reevo.ai/Getting-started/Onboarding)
+- [API reference](https://help.reevo.ai/Data-management-and-migration/Integrations-With-Other-Tools)
+- [Pricing](https://www.reevo.ai/pricing)
+- [Support](https://help.reevo.ai)
+- [Changelog](https://www.reevo.ai/release-notes)
+- [Blog](https://www.reevo.ai/blog)
+- [Compliance](https://www.reevo.ai/pricing)
+- [Terms of service](https://www.reevo.ai/terms)
+- [Privacy policy](https://www.reevo.ai/privacy)
+- [GitHub](https://github.com/ReevoAI)
+
+## API Evangelist rating
+
+**Kin Score 52.5** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 39.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 26.3 |
+| Developer ergonomics | 54.8 |
+| Access clarity | 77.6 |
+
+**Agent readiness 56.5** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 36.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/reevo/](https://apis.io/providers/reevo/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Reevo: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/reevo/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
